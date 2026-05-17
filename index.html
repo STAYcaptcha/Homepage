@@ -1,0 +1,2313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>STAYcaptcha</title>
+    <!-- 网页标签icon图标 -->
+    <link rel="icon" type="image/png" href="https://s41.ax1x.com/2026/05/16/pevdaPf.png">
+    <link rel="shortcut icon" type="image/png" href="https://s41.ax1x.com/2026/05/16/pevdaPf.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 浅色模式 */
+        :root {
+            --bg-nav: #ffffff;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-color: #1f2937;
+            --text-secondary: #4b5563;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --btn-bg: #f3f4f6;
+            --btn-hover: #e5e7eb;
+            --code-bg: #f8f9fa;
+            --dropdown-bg: #ffffff;
+            --dropdown-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 深色模式 */
+        body.dark {
+            --bg-nav: #1f2937;
+            --bg-body: #111827;
+            --bg-card: #1f2937;
+            --text-color: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border-color: #374151;
+            --btn-bg: #374151;
+            --btn-hover: #4b5563;
+            --code-bg: #1e1e2e;
+            --dropdown-bg: #374151;
+            --dropdown-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: background-color 0.3s, color 0.2s;
+            min-height: 100vh;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            background-color: var(--bg-nav);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            display: block;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            position: relative;
+        }
+
+        /* 下拉菜单容器 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dropbtn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .dropdown-arrow {
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .dropdown.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background-color: var(--dropdown-bg);
+            min-width: 120px;
+            border-radius: 12px;
+            box-shadow: var(--dropdown-shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+        }
+
+        .dropdown.active .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 10px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--btn-hover);
+        }
+
+        /* 主要内容区 */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 24px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            margin-bottom: 24px;
+        }
+
+        .hero-logo-img {
+            height: 200px;
+            width: auto;
+            display: block;
+            border-radius: 32px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        /* 人机验证容器 */
+        .captcha-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 60px;
+        }
+
+        /* 重置按钮 */
+        .reset-btn-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .reset-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: #dc2626;
+        }
+
+        body.dark .reset-btn {
+            background-color: #dc2626;
+        }
+
+        body.dark .reset-btn:hover {
+            background-color: #b91c1c;
+        }
+
+        /* 两种交互方式模块 */
+        .interactions-section {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            text-align: left;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 32px;
+            color: var(--text-color);
+        }
+
+        .interactions-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+
+        .interaction-card {
+            flex: 1;
+            min-width: 260px;
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .interaction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .interaction-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-color);
+        }
+
+        .interaction-card p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* 源码区域 */
+        .source-section {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            text-align: left;
+        }
+
+        .source-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        /* 声明区域 */
+        .declaration-section {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 60px;
+            text-align: left;
+        }
+
+        .declaration-title {
+            font-size: 28px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text-color);
+        }
+
+        .declaration-content {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px 32px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .declaration-content p {
+            margin-bottom: 12px;
+        }
+
+        .declaration-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--bg-nav);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-language {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn {
+            padding: 4px 12px;
+            font-size: 12px;
+            background-color: var(--btn-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        code {
+            font-family: inherit;
+        }
+
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 36px;
+            }
+            .hero-logo-img {
+                height: 120px;
+            }
+            .hero {
+                padding: 40px 20px 30px;
+            }
+            .section-title, .source-title, .declaration-title {
+                font-size: 24px;
+            }
+            .interaction-card {
+                min-width: 100%;
+            }
+            pre {
+                font-size: 11px;
+                padding: 16px;
+            }
+            .declaration-content {
+                padding: 20px;
+            }
+        }
+
+        /* ========== 人机验证组件样式 ========== */
+        .captcha-card {
+            max-width: 360px;
+            width: 90%;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 0;
+            position: relative;
+        }
+
+        body.dark .captcha-card {
+            background: #1e293b;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .captcha-content {
+            padding: 28px 20px 28px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .captcha-container-inner {
+            width: 100%;
+            text-align: center;
+        }
+
+        .captcha-container-inner h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #1f2937;
+        }
+
+        body.dark .captcha-container-inner h2 {
+            color: #f9fafb;
+        }
+
+        .captcha-container-inner h5 {
+            font-weight: normal;
+            margin-bottom: 32px;
+            color: #6b6b6b;
+        }
+
+        body.dark .captcha-container-inner h5 {
+            color: #9ca3af;
+        }
+
+        .captcha-container-inner img {
+            display: block;
+            margin: 0 auto;
+            pointer-events: auto;
+            -webkit-user-drag: none;
+            user-drag: none;
+            -webkit-user-select: none;
+            user-select: none;
+            margin-bottom: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .buttons-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .accessibility-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background-color: #6b6b6b;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            overflow: visible;
+        }
+
+        .accessibility-btn.lighten {
+            background-color: #c0c0c0;
+        }
+
+        .accessibility-btn img {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0;
+            object-fit: contain;
+        }
+
+        .tooltip-dialog {
+            position: absolute;
+            left: 100%;
+            right: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 12px;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1.5px solid #d1d5db;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: normal;
+            white-space: nowrap;
+            z-index: 20;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        body.dark .tooltip-dialog {
+            background-color: #1f2937;
+            color: #f9fafb;
+            border-color: #4b5563;
+        }
+
+        .accessibility-btn:hover .tooltip-dialog {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .verify-section {
+            margin-top: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 220px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .long-press-btn {
+            position: relative;
+            width: 100%;
+            height: 44px;
+            border-radius: 100px;
+            background-color: white;
+            border: 2px solid #2b6ef0;
+            cursor: pointer;
+            overflow: hidden;
+            margin: 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            user-select: none;
+        }
+
+        body.dark .long-press-btn {
+            background-color: #1e293b;
+            border-color: #60a5fa;
+        }
+
+        .fill-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #2b6ef0;
+            border-radius: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2b6ef0;
+            background: transparent;
+            user-select: none;
+        }
+
+        body.dark .btn-text {
+            color: #60a5fa;
+        }
+
+        .retry-message {
+            margin-top: 6px;
+            font-size: 0.83rem;
+            font-weight: normal;
+            color: #e53e3e;
+            text-align: left;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .retry-message.show {
+            opacity: 1;
+        }
+
+        .fullscreen-success {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+            user-select: none;
+            border-radius: 20px;
+        }
+
+        body.dark .fullscreen-success {
+            background-color: #1e293b;
+        }
+
+        .fullscreen-success.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .success-circle {
+            width: 120px;
+            height: 120px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .success-circle svg {
+            width: 70px;
+            height: 70px;
+            stroke: #ffffff;
+            stroke-width: 5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .success-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #000000;
+            user-select: none;
+        }
+
+        body.dark .success-text {
+            color: #f9fafb;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            animation: blink 1.2s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.2; transform: scale(0.8);}
+            50% { opacity: 1; transform: scale(1.2);}
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo-area">
+                <img class="logo-img" src="https://s41.ax1x.com/2026/05/16/pevdaPf.png" alt="logo" onerror="this.src='https://placehold.co/40x40/3b82f6/white?text=S'">
+                <span class="logo-text">STAYcaptcha</span>
+            </div>
+            <div class="nav-buttons">
+                <!-- 语言切换下拉菜单 -->
+                <div class="dropdown" id="langDropdown">
+                    <button class="dropbtn" id="langBtn">
+                        <span id="langBtnText">中文</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#" data-lang="zh">中文</a>
+                        <a href="#" data-lang="en">English</a>
+                    </div>
+                </div>
+                <!-- 主题切换下拉菜单 -->
+                <div class="dropdown" id="themeDropdown">
+                    <button class="dropbtn" id="themeBtn">
+                        <span id="themeBtnText">深色</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="#" data-theme="light" id="themeOptionLight">浅色模式</a>
+                        <a href="#" data-theme="dark" id="themeOptionDark">深色模式</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 中间主要内容区 -->
+    <div class="hero">
+        <div class="hero-logo">
+            <img class="hero-logo-img" src="https://s41.ax1x.com/2026/05/16/pevdaPf.png" alt="STAYcaptcha" onerror="this.src='https://placehold.co/200x200/3b82f6/white?text=S'">
+        </div>
+        <div class="hero-title">STAYcaptcha</div>
+        <div class="hero-description" id="heroDesc">
+            由 Wisnovate 设计的动作式质询 CAPTCHA（人机身份验证）组件，可自定义显示内容。
+        </div>
+
+        <!-- 预览标题 -->
+        <div class="preview-title" id="previewTitle">预览：</div>
+
+        <!-- 人机验证组件 + 重置按钮 -->
+        <div class="captcha-wrapper">
+            <div class="captcha-card" id="captchaCard">
+                <div class="captcha-content">
+                    <div class="captcha-container-inner">
+                        <h2 id="captchaTitle">证明你不是机器人</h2>
+                        <img src="https://s41.ax1x.com/2026/05/16/pevdaPf.png" alt="" draggable="false">
+                        <h5 id="captchaHint">长按该按钮</h5>
+
+                        <div class="buttons-row">
+                            <div class="accessibility-btn" id="accessBtn">
+                                <img src="https://s41.ax1x.com/2026/05/17/pevReZ8.png" alt="accessibility" draggable="false">
+                                <div class="tooltip-dialog" id="tooltipDialog">可访问性挑战</div>
+                            </div>
+
+                            <div class="verify-section" style="width: 220px; margin:0;">
+                                <div class="long-press-btn" id="pressBtn">
+                                    <div class="fill-progress" id="fillProgress"></div>
+                                    <div class="btn-text" id="btnText">
+                                        <span id="textSpan">按住</span>
+                                    </div>
+                                </div>
+                                <div id="retryMsg" class="retry-message">请再试一次</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="fullscreenSuccess" class="fullscreen-success">
+                    <div class="success-circle">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 6L9 17L4 12" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="success-text" id="successText">已通过</div>
+                </div>
+            </div>
+            <div class="reset-btn-container">
+                <button class="reset-btn" id="resetBtn">重置</button>
+            </div>
+        </div>
+
+        <!-- 两种交互方式模块 -->
+        <div class="interactions-section">
+            <div class="section-title" id="sectionTitle">两种交互方式</div>
+            <div class="interactions-grid">
+                <div class="interaction-card">
+                    <h3 id="interaction1Title">方式一：长按验证</h3>
+                    <p id="interaction1Desc">长按「按住」按钮5秒钟，进度条满后自动完成验证，无需其他操作。</p>
+                </div>
+                <div class="interaction-card">
+                    <h3 id="interaction2Title">方式二：可访问性挑战</h3>
+                    <p id="interaction2Desc">按下「可访问性挑战」按钮5秒后，出现“再次按下”提示，点击按住按钮即可完成验证。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 源码区域 -->
+        <div class="source-section">
+            <div class="source-title" id="sourceTitle">源码</div>
+            <div class="code-block">
+                <div class="code-header">
+                    <span class="code-language">HTML</span>
+                    <button class="copy-btn" id="copyBtn">复制代码</button>
+                </div>
+                <pre><code id="sourceCode">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes"&gt;
+    &lt;title&gt;证明你不是机器人&lt;/title&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+
+        body {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            margin: 0;
+            padding: 0;
+            -webkit-touch-callout: none;
+        }
+
+        @media (min-width: 769px) {
+            body {
+                background: #f1f5f9;
+            }
+            .floating-modal {
+                max-width: 360px;
+                width: 90%;
+                background: #ffffff;
+                border-radius: 20px;
+                box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.08);
+                margin: 0 auto;
+                overflow: hidden;
+                padding: 0;
+                position: relative;
+            }
+            .modal-content {
+                padding: 28px 20px 28px 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .container {
+                width: 100%;
+            }
+            h2 {
+                margin-top: 0;
+                font-size: 1.5rem;
+            }
+            .verify-section {
+                margin-bottom: 0;
+            }
+            .fullscreen-success {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s, opacity 0.3s ease;
+                user-select: none;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .floating-modal {
+                width: 100%;
+                background: transparent;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+            .modal-content {
+                padding: 20px 16px;
+                width: 100%;
+            }
+            .container {
+                width: 100%;
+            }
+            .fullscreen-success {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s, opacity 0.3s ease;
+                user-select: none;
+            }
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto;
+            pointer-events: auto;
+            -webkit-user-drag: none;
+            user-drag: none;
+            -webkit-user-select: none;
+            user-select: none;
+            margin-bottom: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        h5 {
+            font-weight: normal;
+            margin-bottom: 32px;
+            color: #6b6b6b;
+        }
+
+        .buttons-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .accessibility-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background-color: #6b6b6b;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            overflow: visible;
+        }
+
+        .accessibility-btn.lighten {
+            background-color: #c0c0c0;
+        }
+
+        .accessibility-btn img {
+            width: 28px;
+            height: 28px;
+            display: block;
+            margin: 0;
+            object-fit: contain;
+        }
+
+        .tooltip-dialog {
+            position: absolute;
+            left: 100%;
+            right: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 12px;
+            background-color: #ffffff;
+            color: #000000;
+            border: 1.5px solid #d1d5db;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: normal;
+            white-space: nowrap;
+            z-index: 20;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            visibility: hidden;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+
+        .tooltip-dialog::after {
+            display: none;
+        }
+
+        .accessibility-btn:hover .tooltip-dialog {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .verify-section {
+            margin-top: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 220px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .long-press-btn {
+            position: relative;
+            width: 100%;
+            height: 44px;
+            border-radius: 100px;
+            background-color: white;
+            border: 2px solid #2b6ef0;
+            cursor: pointer;
+            overflow: hidden;
+            margin: 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            user-select: none;
+        }
+
+        .fill-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background-color: #2b6ef0;
+            border-radius: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2b6ef0;
+            background: transparent;
+            user-select: none;
+        }
+
+        .retry-message {
+            margin-top: 6px;
+            font-size: 0.83rem;
+            font-weight: normal;
+            color: #e53e3e;
+            text-align: left;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-family: inherit;
+            user-select: none;
+        }
+
+        .retry-message.show {
+            opacity: 1;
+        }
+
+        .fullscreen-success.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .success-circle {
+            width: 120px;
+            height: 120px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .success-circle svg {
+            width: 70px;
+            height: 70px;
+            stroke: #ffffff;
+            stroke-width: 5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .success-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #000000;
+            user-select: none;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            animation: blink 1.2s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.2; transform: scale(0.8);}
+            50% { opacity: 1; transform: scale(1.2);}
+        }
+    &lt;/style&gt;
+    &lt;script&gt;
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('copy', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('cut', function(e) { e.preventDefault(); return false; });
+        document.addEventListener('selectstart', function(e) { e.preventDefault(); return false; });
+        window.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="floating-modal" id="floatingModal"&gt;
+        &lt;div class="modal-content"&gt;
+            &lt;div class="container"&gt;
+                &lt;h2&gt;证明你不是机器人&lt;/h2&gt;
+                &lt;img src="https://s41.ax1x.com/2026/05/16/pevdaPf.png" alt="" draggable="false"&gt;
+                &lt;h5&gt;长按该按钮&lt;/h5&gt;
+
+                &lt;div class="buttons-row"&gt;
+                    &lt;div class="accessibility-btn" id="accessBtn"&gt;
+                        &lt;img src="https://s41.ax1x.com/2026/05/17/pevReZ8.png" alt="accessibility" draggable="false"&gt;
+                        &lt;div class="tooltip-dialog" id="tooltipDialog"&gt;可访问性挑战&lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;div class="verify-section" style="width: 220px; margin:0;"&gt;
+                        &lt;div class="long-press-btn" id="pressBtn"&gt;
+                            &lt;div class="fill-progress" id="fillProgress"&gt;&lt;/div&gt;
+                            &lt;div class="btn-text" id="btnText"&gt;
+                                &lt;span id="textSpan"&gt;按住&lt;/span&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div id="retryMsg" class="retry-message"&gt;请再试一次&lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div id="fullscreenSuccess" class="fullscreen-success"&gt;
+            &lt;div class="success-circle"&gt;
+                &lt;svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"&gt;
+                    &lt;path d="M20 6L9 17L4 12" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/&gt;
+                &lt;/svg&gt;
+            &lt;/div&gt;
+            &lt;div class="success-text"&gt;已通过&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        (function(){
+            const pressBtn = document.getElementById('pressBtn');
+            const fillProgress = document.getElementById('fillProgress');
+            const btnTextDiv = document.getElementById('btnText');
+            const textSpan = document.getElementById('textSpan');
+            const retryMsgDiv = document.getElementById('retryMsg');
+            const fullscreenDiv = document.getElementById('fullscreenSuccess');
+            const accessBtn = document.getElementById('accessBtn');
+            const tooltipDialog = document.getElementById('tooltipDialog');
+
+            let stepInterval = null;
+            let isPressing = false;
+            let hasMoved = false;
+            let startX = 0, startY = 0;
+            let startTimestamp = 0;
+            let currentFillPercent = 0;
+            const REQUIRED_DURATION = 5000;
+
+            let awaitingSecondPress = false;
+            let autoPressHasMoved = false;
+            let autoPressStartX = 0, autoPressStartY = 0;
+
+            function lightenAccessBtn() {
+                accessBtn.classList.add('lighten');
+            }
+
+            function resetAccessBtnColor() {
+                accessBtn.classList.remove('lighten');
+            }
+
+            function continueWithSecondPress() {
+                awaitingSecondPress = false;
+                if (autoPressHasMoved) {
+                    successWithAnimation();
+                } else {
+                    failWithAnimation();
+                }
+            }
+
+            function waitForSecondPress() {
+                if (stepInterval) clearInterval(stepInterval);
+                stepInterval = null;
+                isPressing = false;
+                textSpan.innerHTML = '再次按下';
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                btnTextDiv.style.color = 'white';
+                fillProgress.style.width = '100%';
+                awaitingSecondPress = true;
+                const handler = function(e) {
+                    e.preventDefault();
+                    if (awaitingSecondPress) {
+                        pressBtn.removeEventListener('click', handler);
+                        continueWithSecondPress();
+                    }
+                };
+                pressBtn.addEventListener('click', handler);
+                window.secondPressHandler = handler;
+            }
+
+            function startAutoPress() {
+                if (fullscreenDiv.classList.contains('show')) return;
+                if (isPressing) {
+                    resetPressState(true, false);
+                }
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (window.secondPressHandler) {
+                    pressBtn.removeEventListener('click', window.secondPressHandler);
+                }
+                resetPressState(true, false);
+                awaitingSecondPress = false;
+                
+                let autoStartX, autoStartY;
+                const rect = pressBtn.getBoundingClientRect();
+                autoStartX = rect.left + rect.width / 2;
+                autoStartY = rect.top + rect.height / 2;
+                
+                if (window.lastMouseX !== undefined && window.lastMouseY !== undefined) {
+                    autoStartX = window.lastMouseX;
+                    autoStartY = window.lastMouseY;
+                }
+                
+                isPressing = true;
+                hasMoved = false;
+                autoPressHasMoved = false;
+                startX = autoStartX;
+                startY = autoStartY;
+                autoPressStartX = autoStartX;
+                autoPressStartY = autoStartY;
+                startTimestamp = Date.now();
+                
+                textSpan.innerHTML = '请稍候';
+                textSpan.style.fontSize = '';
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                const oldLoader = textSpan.querySelector('.loading-dots');
+                if (oldLoader) oldLoader.remove();
+                btnTextDiv.style.color = '#2b6ef0';
+                pressBtn.style.backgroundColor = 'white';
+                pressBtn.style.border = '2px solid #2b6ef0';
+                
+                startFillAnimationAuto();
+                
+                window.addEventListener('mousemove', autoMoveHandler);
+                window.addEventListener('mouseup', autoCancelHandler);
+            }
+            
+            function autoMoveHandler(e) {
+                if (!isPressing) return;
+                if (Math.abs(e.clientX - startX) > 3 || Math.abs(e.clientY - startY) > 3) {
+                    if (!hasMoved) {
+                        hasMoved = true;
+                        autoPressHasMoved = true;
+                    }
+                }
+                window.lastMouseX = e.clientX;
+                window.lastMouseY = e.clientY;
+            }
+            
+            function autoCancelHandler(e) {}
+            
+            function stopAutoDetection() {
+                window.removeEventListener('mousemove', autoMoveHandler);
+                window.removeEventListener('mouseup', autoCancelHandler);
+            }
+            
+            function startFillAnimationAuto() {
+                if (stepInterval) clearInterval(stepInterval);
+                currentFillPercent = 0;
+                fillProgress.style.width = '0%';
+                startTimestamp = Date.now();
+                stepInterval = setInterval(() => {
+                    if (!isPressing) return;
+                    const elapsed = Date.now() - startTimestamp;
+                    let percent = (elapsed / REQUIRED_DURATION) * 100;
+                    if (percent >= 100) {
+                        percent = 100;
+                        fillProgress.style.width = '100%';
+                        btnTextDiv.style.color = 'white';
+                        if (stepInterval) clearInterval(stepInterval);
+                        stepInterval = null;
+                        if (isPressing) {
+                            isPressing = false;
+                            stopAutoDetection();
+                            waitForSecondPress();
+                        }
+                        return;
+                    }
+                    currentFillPercent = percent;
+                    fillProgress.style.width = percent + '%';
+                    const ratio = Math.min(1, percent / 100);
+                    const r = 43 + (255 - 43) * ratio;
+                    const g = 110 + (255 - 110) * ratio;
+                    const b = 240 + (255 - 240) * ratio;
+                    btnTextDiv.style.color = `rgb(${r}, ${g}, ${b})`;
+                }, 30);
+            }
+            
+            window.addEventListener('mousemove', function(e) {
+                window.lastMouseX = e.clientX;
+                window.lastMouseY = e.clientY;
+            });
+            window.lastMouseX = window.innerWidth / 2;
+            window.lastMouseY = window.innerHeight / 2;
+
+            function startAnimationAndThen(isSuccess) {
+                textSpan.style.transition = 'transform 0.25s ease';
+                textSpan.style.display = 'inline-flex';
+                textSpan.style.alignItems = 'center';
+                textSpan.style.justifyContent = 'center';
+                textSpan.style.transform = 'rotateX(90deg)';
+                
+                setTimeout(() => {
+                    textSpan.innerHTML = `&lt;svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block; margin:0 auto;"&gt;&lt;path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/&gt;&lt;/svg&gt;`;
+                    textSpan.style.transform = 'rotateX(0deg)';
+                    textSpan.style.fontSize = 'inherit';
+                    
+                    window.flipTimer = setTimeout(() => {
+                        textSpan.style.transform = 'rotateX(90deg)';
+                        setTimeout(() => {
+                            textSpan.innerHTML = '';
+                            const loaderDiv = document.createElement('div');
+                            loaderDiv.className = 'loading-dots';
+                            loaderDiv.innerHTML = '&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;';
+                            textSpan.appendChild(loaderDiv);
+                            textSpan.style.transform = 'rotateX(0deg)';
+                            textSpan.style.display = 'flex';
+                            textSpan.style.alignItems = 'center';
+                            textSpan.style.justifyContent = 'center';
+                            
+                            window.loadingTimer = setTimeout(() => {
+                                if (isSuccess) {
+                                    fullscreenDiv.classList.add('show');
+                                    resetPressState(true, false);
+                                } else {
+                                    resetPressState(true, true);
+                                    retryMsgDiv.classList.add('show');
+                                }
+                                resetAccessBtnColor();
+                            }, 3000);
+                        }, 200);
+                    }, 800);
+                }, 200);
+            }
+
+            function resetPressState(resetFill = true, keepRetryMessage = false) {
+                if (stepInterval) {
+                    clearInterval(stepInterval);
+                    stepInterval = null;
+                }
+                isPressing = false;
+                hasMoved = false;
+                awaitingSecondPress = false;
+                if (window.secondPressHandler) {
+                    pressBtn.removeEventListener('click', window.secondPressHandler);
+                    window.secondPressHandler = null;
+                }
+                if (resetFill) {
+                    currentFillPercent = 0;
+                    fillProgress.style.width = '0%';
+                    btnTextDiv.style.color = '#2b6ef0';
+                    textSpan.innerHTML = '按住';
+                    textSpan.style.transform = '';
+                    textSpan.style.fontSize = '';
+                    textSpan.style.display = '';
+                    const loader = textSpan.querySelector('.loading-dots');
+                    if (loader) loader.remove();
+                    pressBtn.style.backgroundColor = 'white';
+                    pressBtn.style.border = '2px solid #2b6ef0';
+                }
+                if (!keepRetryMessage) {
+                    retryMsgDiv.classList.remove('show');
+                }
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (window.whitenTimer) clearTimeout(window.whitenTimer);
+                if (window.retrySequenceTimer) clearTimeout(window.retrySequenceTimer);
+                stopAutoDetection();
+            }
+
+            function failWithAnimation() {
+                if (stepInterval) clearInterval(stepInterval);
+                isPressing = false;
+                startAnimationAndThen(false);
+            }
+
+            function successWithAnimation() {
+                if (stepInterval) clearInterval(stepInterval);
+                isPressing = false;
+                startAnimationAndThen(true);
+            }
+
+            function onLongPressComplete() {
+                fillProgress.style.width = '100%';
+                btnTextDiv.style.color = 'white';
+                if (stepInterval) clearInterval(stepInterval);
+                if (hasMoved) {
+                    successWithAnimation();
+                } else {
+                    failWithAnimation();
+                }
+            }
+
+            function startFillAnimation() {
+                if (stepInterval) clearInterval(stepInterval);
+                currentFillPercent = 0;
+                fillProgress.style.width = '0%';
+                startTimestamp = Date.now();
+                stepInterval = setInterval(() => {
+                    if (!isPressing) return;
+                    const elapsed = Date.now() - startTimestamp;
+                    let percent = (elapsed / REQUIRED_DURATION) * 100;
+                    if (percent >= 100) {
+                        percent = 100;
+                        fillProgress.style.width = '100%';
+                        btnTextDiv.style.color = 'white';
+                        if (stepInterval) clearInterval(stepInterval);
+                        stepInterval = null;
+                        if (isPressing) {
+                            isPressing = false;
+                            onLongPressComplete();
+                        }
+                        return;
+                    }
+                    currentFillPercent = percent;
+                    fillProgress.style.width = percent + '%';
+                    const ratio = Math.min(1, percent / 100);
+                    const r = 43 + (255 - 43) * ratio;
+                    const g = 110 + (255 - 110) * ratio;
+                    const b = 240 + (255 - 240) * ratio;
+                    btnTextDiv.style.color = `rgb(${r}, ${g}, ${b})`;
+                }, 30);
+            }
+
+            function onPointerDown(e) {
+                e.preventDefault();
+                if (fullscreenDiv.classList.contains('show')) return;
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (awaitingSecondPress) {
+                    return;
+                }
+                resetPressState(true, false);
+                isPressing = true;
+                hasMoved = false;
+                const point = e.touches ? e.touches[0] : e;
+                startX = point.clientX;
+                startY = point.clientY;
+                textSpan.innerHTML = '请稍候';
+                textSpan.style.fontSize = '';
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                const oldLoader = textSpan.querySelector('.loading-dots');
+                if (oldLoader) oldLoader.remove();
+                btnTextDiv.style.color = '#2b6ef0';
+                pressBtn.style.backgroundColor = 'white';
+                pressBtn.style.border = '2px solid #2b6ef0';
+                startFillAnimation();
+                window.addEventListener('pointermove', onPointerMove);
+                window.addEventListener('pointerup', onPointerUp);
+                window.addEventListener('touchcancel', onPointerUp);
+            }
+
+            function onPointerMove(e) {
+                if (!isPressing) return;
+                const point = e.touches ? e.touches[0] : e;
+                if (Math.abs(point.clientX - startX) > 3 || Math.abs(point.clientY - startY) > 3) {
+                    if (!hasMoved) hasMoved = true;
+                }
+            }
+
+            function onPointerUp(e) {
+                if (!isPressing) {
+                    cleanupEvents();
+                    return;
+                }
+                if (currentFillPercent < 99) {
+                    isPressing = false;
+                    if (stepInterval) clearInterval(stepInterval);
+                    resetPressState(true);
+                    retryMsgDiv.classList.add('show');
+                } else {
+                    isPressing = false;
+                }
+                cleanupEvents();
+            }
+
+            function cleanupEvents() {
+                window.removeEventListener('pointermove', onPointerMove);
+                window.removeEventListener('pointerup', onPointerUp);
+                window.removeEventListener('touchcancel', onPointerUp);
+            }
+
+            accessBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                lightenAccessBtn();
+                startAutoPress();
+            });
+            
+            pressBtn.addEventListener('pointerdown', (e) => {
+                onPointerDown(e);
+            });
+            pressBtn.addEventListener('dragstart', (e) => e.preventDefault());
+        })();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+            </div>
+        </div>
+
+        <!-- 声明区域 -->
+        <div class="declaration-section">
+            <div class="declaration-title" id="declarationTitle">声明</div>
+            <div class="declaration-content">
+                <p id="declarationText1">本人机验证（STAYcaptcha）为开源项目，代码公开、免费试用。</p>
+                <p id="declarationText2">任何人可自由使用、修改、分享，但需保留版权声明：©智拓新创Wisnovate版权所有。</p>
+                <p id="declarationText3">本项目的验证能力不保证绝对安全，使用风险由使用者自行承担。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== 中英文语言包 ==========
+        const translations = {
+            zh: {
+                heroDesc: "由 Wisnovate 设计的动作式质询 CAPTCHA（人机身份验证）组件，可自定义显示内容。",
+                previewTitle: "预览：",
+                captchaTitle: "证明你不是机器人",
+                captchaHint: "长按该按钮",
+                btnHold: "按住",
+                btnPleaseWait: "请稍候",
+                btnPressAgain: "再次按下",
+                retryMsg: "请再试一次",
+                successText: "已通过",
+                tooltip: "可访问性挑战",
+                langBtnText: "中文",
+                themeBtnLight: "浅色",
+                themeBtnDark: "深色",
+                themeOptionLight: "浅色模式",
+                themeOptionDark: "深色模式",
+                sectionTitle: "两种交互方式",
+                interaction1Title: "方式一：长按验证",
+                interaction1Desc: "长按「按住」按钮5秒钟，进度条满后自动完成验证，无需其他操作。",
+                interaction2Title: "方式二：可访问性挑战",
+                interaction2Desc: "按下「可访问性挑战」按钮5秒后，出现“再次按下”提示，点击按住按钮即可完成验证。",
+                sourceTitle: "源码",
+                declarationTitle: "声明",
+                declarationText1: "本人机验证（STAYcaptcha）为开源项目，代码公开、免费试用。",
+                declarationText2: "任何人可自由使用、修改、分享，但需保留版权声明：©智拓新创Wisnovate版权所有。",
+                declarationText3: "本项目的验证能力不保证绝对安全，使用风险由使用者自行承担。",
+                resetBtnText: "重置",
+                copyBtnText: "复制代码",
+                copySuccess: "已复制！",
+                copyFailed: "复制失败"
+            },
+            en: {
+                heroDesc: "An action-based challenge CAPTCHA component designed by Wisnovate for human verification, with customizable display content.",
+                previewTitle: "Preview:",
+                captchaTitle: "Prove you're not a robot",
+                captchaHint: "Press and hold the button",
+                btnHold: "Hold",
+                btnPleaseWait: "Please wait",
+                btnPressAgain: "Press again",
+                retryMsg: "Please try again",
+                successText: "Verified",
+                tooltip: "Accessibility challenge",
+                langBtnText: "English",
+                themeBtnLight: "Light",
+                themeBtnDark: "Dark",
+                themeOptionLight: "Light Mode",
+                themeOptionDark: "Dark Mode",
+                sectionTitle: "Two Interaction Methods",
+                interaction1Title: "Method 1: Long Press",
+                interaction1Desc: "Press and hold the button for 5 seconds, the progress bar fills up and verification completes automatically.",
+                interaction2Title: "Method 2: Accessibility Challenge",
+                interaction2Desc: "Press the Accessibility Challenge button for 5 seconds, then click the hold button to complete verification.",
+                sourceTitle: "Source Code",
+                declarationTitle: "Declaration",
+                declarationText1: "This human verification (STAYcaptcha) is an open-source project with publicly available code and free trial.",
+                declarationText2: "Anyone is free to use, modify, and share it, but must retain the copyright notice: © Wisnovate. All rights reserved.",
+                declarationText3: "The verification capability of this project is not guaranteed to be absolutely secure, and the user assumes all risks of use.",
+                resetBtnText: "Reset",
+                copyBtnText: "Copy Code",
+                copySuccess: "Copied!",
+                copyFailed: "Copy failed"
+            }
+        };
+
+        let currentLang = 'zh';
+        let currentTheme = 'dark';
+
+        // DOM 元素
+        const langBtnText = document.getElementById('langBtnText');
+        const themeBtnText = document.getElementById('themeBtnText');
+        const themeOptionLight = document.getElementById('themeOptionLight');
+        const themeOptionDark = document.getElementById('themeOptionDark');
+        const heroDesc = document.getElementById('heroDesc');
+        const previewTitle = document.getElementById('previewTitle');
+        const captchaTitle = document.getElementById('captchaTitle');
+        const captchaHint = document.getElementById('captchaHint');
+        const textSpan = document.getElementById('textSpan');
+        const retryMsgDiv = document.getElementById('retryMsg');
+        const successText = document.getElementById('successText');
+        const tooltipDialog = document.getElementById('tooltipDialog');
+        const sectionTitle = document.getElementById('sectionTitle');
+        const interaction1Title = document.getElementById('interaction1Title');
+        const interaction1Desc = document.getElementById('interaction1Desc');
+        const interaction2Title = document.getElementById('interaction2Title');
+        const interaction2Desc = document.getElementById('interaction2Desc');
+        const sourceTitle = document.getElementById('sourceTitle');
+        const declarationTitle = document.getElementById('declarationTitle');
+        const declarationText1 = document.getElementById('declarationText1');
+        const declarationText2 = document.getElementById('declarationText2');
+        const declarationText3 = document.getElementById('declarationText3');
+        const resetBtn = document.getElementById('resetBtn');
+        const copyBtn = document.getElementById('copyBtn');
+
+        // 下拉菜单元素
+        const langDropdown = document.getElementById('langDropdown');
+        const themeDropdown = document.getElementById('themeDropdown');
+
+        // 更新所有文本
+        function updateLanguage() {
+            const t = translations[currentLang];
+            heroDesc.textContent = t.heroDesc;
+            previewTitle.textContent = t.previewTitle;
+            captchaTitle.textContent = t.captchaTitle;
+            captchaHint.textContent = t.captchaHint;
+            if (typeof window.updateButtonTextByLang === 'function') {
+                window.updateButtonTextByLang(t);
+            } else {
+                if (!window.isPressingGlobal && !window.awaitingSecondPressGlobal) {
+                    textSpan.innerHTML = t.btnHold;
+                }
+            }
+            retryMsgDiv.textContent = t.retryMsg;
+            successText.textContent = t.successText;
+            tooltipDialog.textContent = t.tooltip;
+            langBtnText.textContent = t.langBtnText;
+            sectionTitle.textContent = t.sectionTitle;
+            interaction1Title.textContent = t.interaction1Title;
+            interaction1Desc.textContent = t.interaction1Desc;
+            interaction2Title.textContent = t.interaction2Title;
+            interaction2Desc.textContent = t.interaction2Desc;
+            sourceTitle.textContent = t.sourceTitle;
+            declarationTitle.textContent = t.declarationTitle;
+            declarationText1.textContent = t.declarationText1;
+            declarationText2.textContent = t.declarationText2;
+            declarationText3.textContent = t.declarationText3;
+            resetBtn.textContent = t.resetBtnText;
+            copyBtn.textContent = t.copyBtnText;
+            
+            // 更新主题下拉菜单选项文字
+            themeOptionLight.textContent = t.themeOptionLight;
+            themeOptionDark.textContent = t.themeOptionDark;
+            
+            // 更新主题按钮文字
+            updateThemeButtonText();
+        }
+
+        // 更新主题按钮文字
+        function updateThemeButtonText() {
+            const t = translations[currentLang];
+            if (currentTheme === 'light') {
+                themeBtnText.textContent = t.themeBtnLight;
+            } else {
+                themeBtnText.textContent = t.themeBtnDark;
+            }
+        }
+
+        // 应用主题
+        function applyTheme(theme) {
+            currentTheme = theme;
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+            }
+            updateThemeButtonText();
+            localStorage.setItem('staycaptcha_theme', theme);
+        }
+
+        // 切换语言
+        function setLanguage(lang) {
+            currentLang = lang;
+            updateLanguage();
+            if (typeof window.syncLangForCaptcha === 'function') {
+                window.syncLangForCaptcha(translations[currentLang]);
+            }
+            // 关闭下拉菜单
+            langDropdown.classList.remove('active');
+        }
+
+        // 下拉菜单点击外部关闭
+        function setupDropdown(dropdown) {
+            const btn = dropdown.querySelector('.dropbtn');
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // 关闭其他下拉菜单
+                document.querySelectorAll('.dropdown').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('active');
+                });
+                dropdown.classList.toggle('active');
+            });
+        }
+
+        // 点击页面其他地方关闭所有下拉菜单
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.dropdown').forEach(d => {
+                d.classList.remove('active');
+            });
+        });
+
+        // 初始化下拉菜单
+        setupDropdown(langDropdown);
+        setupDropdown(themeDropdown);
+
+        // 语言切换选项点击事件
+        document.querySelectorAll('[data-lang]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const lang = item.getAttribute('data-lang');
+                setLanguage(lang);
+            });
+        });
+
+        // 主题切换选项点击事件
+        document.querySelectorAll('[data-theme]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const theme = item.getAttribute('data-theme');
+                applyTheme(theme);
+                themeDropdown.classList.remove('active');
+            });
+        });
+
+        // 初始化：从 localStorage 加载主题偏好，默认深色模式
+        const savedTheme = localStorage.getItem('staycaptcha_theme');
+        if (savedTheme === 'light') {
+            applyTheme('light');
+        } else {
+            applyTheme('dark');
+        }
+
+        // 复制代码功能
+        const sourceCode = document.getElementById('sourceCode');
+        let copyOriginalText = '';
+        
+        copyBtn.addEventListener('click', async () => {
+            const codeText = sourceCode.innerText;
+            const t = translations[currentLang];
+            try {
+                await navigator.clipboard.writeText(codeText);
+                copyOriginalText = copyBtn.textContent;
+                copyBtn.textContent = t.copySuccess;
+                setTimeout(() => {
+                    copyBtn.textContent = t.copyBtnText;
+                }, 2000);
+            } catch (err) {
+                console.error('复制失败:', err);
+                copyBtn.textContent = t.copyFailed;
+                setTimeout(() => {
+                    copyBtn.textContent = t.copyBtnText;
+                }, 2000);
+            }
+        });
+
+        // ========== 人机验证组件脚本 ==========
+        (function(){
+            const pressBtn = document.getElementById('pressBtn');
+            const fillProgress = document.getElementById('fillProgress');
+            const btnTextDiv = document.getElementById('btnText');
+            const retryMsgDivElem = document.getElementById('retryMsg');
+            const fullscreenDiv = document.getElementById('fullscreenSuccess');
+            const accessBtn = document.getElementById('accessBtn');
+            const resetBtnElem = document.getElementById('resetBtn');
+
+            let stepInterval = null;
+            let isPressing = false;
+            let hasMoved = false;
+            let startX = 0, startY = 0;
+            let startTimestamp = 0;
+            let currentFillPercent = 0;
+            const REQUIRED_DURATION = 5000;
+
+            let awaitingSecondPress = false;
+            let autoPressHasMoved = false;
+            let autoPressStartX = 0, autoPressStartY = 0;
+
+            window.isPressingGlobal = false;
+            window.awaitingSecondPressGlobal = false;
+
+            function updateIsPressingGlobal() {
+                window.isPressingGlobal = isPressing;
+                window.awaitingSecondPressGlobal = awaitingSecondPress;
+            }
+
+            function resetAllState() {
+                if (stepInterval) {
+                    clearInterval(stepInterval);
+                    stepInterval = null;
+                }
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (window.secondPressHandler) {
+                    pressBtn.removeEventListener('click', window.secondPressHandler);
+                    window.secondPressHandler = null;
+                }
+                
+                isPressing = false;
+                hasMoved = false;
+                awaitingSecondPress = false;
+                currentFillPercent = 0;
+                autoPressHasMoved = false;
+                updateIsPressingGlobal();
+                
+                fillProgress.style.width = '0%';
+                btnTextDiv.style.color = '#2b6ef0';
+                const t = translations[currentLang];
+                textSpan.innerHTML = t.btnHold;
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                textSpan.style.transition = '';
+                const loader = textSpan.querySelector('.loading-dots');
+                if (loader) loader.remove();
+                pressBtn.style.backgroundColor = 'white';
+                pressBtn.style.border = '2px solid #2b6ef0';
+                retryMsgDivElem.classList.remove('show');
+                
+                fullscreenDiv.classList.remove('show');
+                
+                accessBtn.classList.remove('lighten');
+                
+                stopAutoDetection();
+                cleanupEvents();
+            }
+
+            resetBtnElem.addEventListener('click', () => {
+                resetAllState();
+            });
+
+            function lightenAccessBtn() {
+                accessBtn.classList.add('lighten');
+            }
+
+            function resetAccessBtnColor() {
+                accessBtn.classList.remove('lighten');
+            }
+
+            function continueWithSecondPress() {
+                awaitingSecondPress = false;
+                updateIsPressingGlobal();
+                if (autoPressHasMoved) {
+                    successWithAnimation();
+                } else {
+                    failWithAnimation();
+                }
+            }
+
+            function waitForSecondPress() {
+                if (stepInterval) clearInterval(stepInterval);
+                stepInterval = null;
+                isPressing = false;
+                const t = translations[currentLang];
+                textSpan.innerHTML = t.btnPressAgain;
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                btnTextDiv.style.color = 'white';
+                fillProgress.style.width = '100%';
+                awaitingSecondPress = true;
+                updateIsPressingGlobal();
+                const handler = function(e) {
+                    e.preventDefault();
+                    if (awaitingSecondPress) {
+                        pressBtn.removeEventListener('click', handler);
+                        continueWithSecondPress();
+                    }
+                };
+                pressBtn.addEventListener('click', handler);
+                window.secondPressHandler = handler;
+            }
+
+            function startAutoPress() {
+                if (fullscreenDiv.classList.contains('show')) return;
+                if (isPressing) {
+                    resetPressState(true, false);
+                }
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (window.secondPressHandler) {
+                    pressBtn.removeEventListener('click', window.secondPressHandler);
+                }
+                resetPressState(true, false);
+                awaitingSecondPress = false;
+                updateIsPressingGlobal();
+                
+                let autoStartX, autoStartY;
+                const rect = pressBtn.getBoundingClientRect();
+                autoStartX = rect.left + rect.width / 2;
+                autoStartY = rect.top + rect.height / 2;
+                
+                if (window.lastMouseX !== undefined && window.lastMouseY !== undefined) {
+                    autoStartX = window.lastMouseX;
+                    autoStartY = window.lastMouseY;
+                }
+                
+                isPressing = true;
+                hasMoved = false;
+                autoPressHasMoved = false;
+                startX = autoStartX;
+                startY = autoStartY;
+                autoPressStartX = autoStartX;
+                autoPressStartY = autoStartY;
+                startTimestamp = Date.now();
+                
+                const t = translations[currentLang];
+                textSpan.innerHTML = t.btnPleaseWait;
+                textSpan.style.fontSize = '';
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                const oldLoader = textSpan.querySelector('.loading-dots');
+                if (oldLoader) oldLoader.remove();
+                btnTextDiv.style.color = '#2b6ef0';
+                pressBtn.style.backgroundColor = 'white';
+                pressBtn.style.border = '2px solid #2b6ef0';
+                
+                startFillAnimationAuto();
+                
+                window.addEventListener('mousemove', autoMoveHandler);
+                window.addEventListener('mouseup', autoCancelHandler);
+            }
+            
+            function autoMoveHandler(e) {
+                if (!isPressing) return;
+                if (Math.abs(e.clientX - startX) > 3 || Math.abs(e.clientY - startY) > 3) {
+                    if (!hasMoved) {
+                        hasMoved = true;
+                        autoPressHasMoved = true;
+                    }
+                }
+                window.lastMouseX = e.clientX;
+                window.lastMouseY = e.clientY;
+            }
+            
+            function autoCancelHandler(e) {}
+            
+            function stopAutoDetection() {
+                window.removeEventListener('mousemove', autoMoveHandler);
+                window.removeEventListener('mouseup', autoCancelHandler);
+            }
+            
+            function startFillAnimationAuto() {
+                if (stepInterval) clearInterval(stepInterval);
+                currentFillPercent = 0;
+                fillProgress.style.width = '0%';
+                startTimestamp = Date.now();
+                stepInterval = setInterval(() => {
+                    if (!isPressing) return;
+                    const elapsed = Date.now() - startTimestamp;
+                    let percent = (elapsed / REQUIRED_DURATION) * 100;
+                    if (percent >= 100) {
+                        percent = 100;
+                        fillProgress.style.width = '100%';
+                        btnTextDiv.style.color = 'white';
+                        if (stepInterval) clearInterval(stepInterval);
+                        stepInterval = null;
+                        if (isPressing) {
+                            isPressing = false;
+                            stopAutoDetection();
+                            waitForSecondPress();
+                        }
+                        return;
+                    }
+                    currentFillPercent = percent;
+                    fillProgress.style.width = percent + '%';
+                    const ratio = Math.min(1, percent / 100);
+                    const r = 43 + (255 - 43) * ratio;
+                    const g = 110 + (255 - 110) * ratio;
+                    const b = 240 + (255 - 240) * ratio;
+                    btnTextDiv.style.color = `rgb(${r}, ${g}, ${b})`;
+                }, 30);
+            }
+            
+            window.addEventListener('mousemove', function(e) {
+                window.lastMouseX = e.clientX;
+                window.lastMouseY = e.clientY;
+            });
+            window.lastMouseX = window.innerWidth / 2;
+            window.lastMouseY = window.innerHeight / 2;
+
+            function startAnimationAndThen(isSuccess) {
+                textSpan.style.transition = 'transform 0.25s ease';
+                textSpan.style.display = 'inline-flex';
+                textSpan.style.alignItems = 'center';
+                textSpan.style.justifyContent = 'center';
+                textSpan.style.transform = 'rotateX(90deg)';
+                
+                setTimeout(() => {
+                    textSpan.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block; margin:0 auto;"><path d="M20 6L9 17L4 12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+                    textSpan.style.transform = 'rotateX(0deg)';
+                    textSpan.style.fontSize = 'inherit';
+                    
+                    window.flipTimer = setTimeout(() => {
+                        textSpan.style.transform = 'rotateX(90deg)';
+                        setTimeout(() => {
+                            textSpan.innerHTML = '';
+                            const loaderDiv = document.createElement('div');
+                            loaderDiv.className = 'loading-dots';
+                            loaderDiv.innerHTML = '<span></span><span></span><span></span>';
+                            textSpan.appendChild(loaderDiv);
+                            textSpan.style.transform = 'rotateX(0deg)';
+                            textSpan.style.display = 'flex';
+                            textSpan.style.alignItems = 'center';
+                            textSpan.style.justifyContent = 'center';
+                            
+                            window.loadingTimer = setTimeout(() => {
+                                if (isSuccess) {
+                                    fullscreenDiv.classList.add('show');
+                                    resetPressState(true, false);
+                                } else {
+                                    resetPressState(true, true);
+                                    retryMsgDivElem.classList.add('show');
+                                }
+                                resetAccessBtnColor();
+                            }, 3000);
+                        }, 200);
+                    }, 800);
+                }, 200);
+            }
+
+            function resetPressState(resetFill = true, keepRetryMessage = false) {
+                if (stepInterval) {
+                    clearInterval(stepInterval);
+                    stepInterval = null;
+                }
+                isPressing = false;
+                hasMoved = false;
+                awaitingSecondPress = false;
+                updateIsPressingGlobal();
+                if (window.secondPressHandler) {
+                    pressBtn.removeEventListener('click', window.secondPressHandler);
+                    window.secondPressHandler = null;
+                }
+                if (resetFill) {
+                    currentFillPercent = 0;
+                    fillProgress.style.width = '0%';
+                    btnTextDiv.style.color = '#2b6ef0';
+                    const t = translations[currentLang];
+                    textSpan.innerHTML = t.btnHold;
+                    textSpan.style.transform = '';
+                    textSpan.style.fontSize = '';
+                    textSpan.style.display = '';
+                    const loader = textSpan.querySelector('.loading-dots');
+                    if (loader) loader.remove();
+                    pressBtn.style.backgroundColor = 'white';
+                    pressBtn.style.border = '2px solid #2b6ef0';
+                }
+                if (!keepRetryMessage) {
+                    retryMsgDivElem.classList.remove('show');
+                }
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (window.whitenTimer) clearTimeout(window.whitenTimer);
+                if (window.retrySequenceTimer) clearTimeout(window.retrySequenceTimer);
+                stopAutoDetection();
+            }
+
+            function failWithAnimation() {
+                if (stepInterval) clearInterval(stepInterval);
+                isPressing = false;
+                startAnimationAndThen(false);
+            }
+
+            function successWithAnimation() {
+                if (stepInterval) clearInterval(stepInterval);
+                isPressing = false;
+                startAnimationAndThen(true);
+            }
+
+            function onLongPressComplete() {
+                fillProgress.style.width = '100%';
+                btnTextDiv.style.color = 'white';
+                if (stepInterval) clearInterval(stepInterval);
+                if (hasMoved) {
+                    successWithAnimation();
+                } else {
+                    failWithAnimation();
+                }
+            }
+
+            function startFillAnimation() {
+                if (stepInterval) clearInterval(stepInterval);
+                currentFillPercent = 0;
+                fillProgress.style.width = '0%';
+                startTimestamp = Date.now();
+                stepInterval = setInterval(() => {
+                    if (!isPressing) return;
+                    const elapsed = Date.now() - startTimestamp;
+                    let percent = (elapsed / REQUIRED_DURATION) * 100;
+                    if (percent >= 100) {
+                        percent = 100;
+                        fillProgress.style.width = '100%';
+                        btnTextDiv.style.color = 'white';
+                        if (stepInterval) clearInterval(stepInterval);
+                        stepInterval = null;
+                        if (isPressing) {
+                            isPressing = false;
+                            onLongPressComplete();
+                        }
+                        return;
+                    }
+                    currentFillPercent = percent;
+                    fillProgress.style.width = percent + '%';
+                    const ratio = Math.min(1, percent / 100);
+                    const r = 43 + (255 - 43) * ratio;
+                    const g = 110 + (255 - 110) * ratio;
+                    const b = 240 + (255 - 240) * ratio;
+                    btnTextDiv.style.color = `rgb(${r}, ${g}, ${b})`;
+                }, 30);
+            }
+
+            function onPointerDown(e) {
+                e.preventDefault();
+                if (fullscreenDiv.classList.contains('show')) return;
+                if (window.flipTimer) clearTimeout(window.flipTimer);
+                if (window.loadingTimer) clearTimeout(window.loadingTimer);
+                if (awaitingSecondPress) {
+                    return;
+                }
+                resetPressState(true, false);
+                isPressing = true;
+                hasMoved = false;
+                const point = e.touches ? e.touches[0] : e;
+                startX = point.clientX;
+                startY = point.clientY;
+                const t = translations[currentLang];
+                textSpan.innerHTML = t.btnPleaseWait;
+                textSpan.style.fontSize = '';
+                textSpan.style.transform = '';
+                textSpan.style.display = '';
+                const oldLoader = textSpan.querySelector('.loading-dots');
+                if (oldLoader) oldLoader.remove();
+                btnTextDiv.style.color = '#2b6ef0';
+                pressBtn.style.backgroundColor = 'white';
+                pressBtn.style.border = '2px solid #2b6ef0';
+                startFillAnimation();
+                window.addEventListener('pointermove', onPointerMove);
+                window.addEventListener('pointerup', onPointerUp);
+                window.addEventListener('touchcancel', onPointerUp);
+            }
+
+            function onPointerMove(e) {
+                if (!isPressing) return;
+                const point = e.touches ? e.touches[0] : e;
+                if (Math.abs(point.clientX - startX) > 3 || Math.abs(point.clientY - startY) > 3) {
+                    if (!hasMoved) hasMoved = true;
+                }
+            }
+
+            function onPointerUp(e) {
+                if (!isPressing) {
+                    cleanupEvents();
+                    return;
+                }
+                if (currentFillPercent < 99) {
+                    isPressing = false;
+                    if (stepInterval) clearInterval(stepInterval);
+                    resetPressState(true);
+                    retryMsgDivElem.classList.add('show');
+                } else {
+                    isPressing = false;
+                }
+                cleanupEvents();
+            }
+
+            function cleanupEvents() {
+                window.removeEventListener('pointermove', onPointerMove);
+                window.removeEventListener('pointerup', onPointerUp);
+                window.removeEventListener('touchcancel', onPointerUp);
+            }
+
+            accessBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                lightenAccessBtn();
+                startAutoPress();
+            });
+            
+            pressBtn.addEventListener('pointerdown', (e) => {
+                onPointerDown(e);
+            });
+            pressBtn.addEventListener('dragstart', (e) => e.preventDefault());
+
+            window.syncLangForCaptcha = function(t) {
+                if (!isPressing && !awaitingSecondPress) {
+                    textSpan.innerHTML = t.btnHold;
+                }
+                retryMsgDivElem.textContent = t.retryMsg;
+                successText.textContent = t.successText;
+                tooltipDialog.textContent = t.tooltip;
+            };
+            
+            window.updateButtonTextByLang = function(t) {
+                if (!isPressing && !awaitingSecondPress) {
+                    textSpan.innerHTML = t.btnHold;
+                }
+            };
+
+            // 初始化语言显示
+            updateLanguage();
+        })();
+    </script>
+</body>
+</html>
