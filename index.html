@@ -26,6 +26,9 @@
             --code-bg: #f8f9fa;
             --dropdown-bg: #ffffff;
             --dropdown-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --copy-btn-bg: #e5e7eb;
+            --copy-btn-hover: #d1d5db;
+            --copy-btn-text: #4b5563;
         }
 
         body.dark {
@@ -41,6 +44,9 @@
             --code-bg: #1e1e2e;
             --dropdown-bg: #374151;
             --dropdown-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            --copy-btn-bg: #374151;
+            --copy-btn-hover: #4b5563;
+            --copy-btn-text: #9ca3af;
         }
 
         body {
@@ -416,8 +422,12 @@
             border: 1px solid var(--border-color);
         }
 
-        .tutorial-step pre {
+        .code-block-wrapper {
+            position: relative;
             margin-top: 12px;
+        }
+
+        .code-block-wrapper pre {
             padding: 16px 20px;
             background-color: var(--code-bg);
             border-radius: 12px;
@@ -429,10 +439,39 @@
             border: 1px solid var(--border-color);
             white-space: pre-wrap;
             word-wrap: break-word;
+            margin: 0;
+            padding-right: 60px;
         }
 
-        .tutorial-step pre code {
+        .code-block-wrapper pre code {
             font-family: inherit;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--copy-btn-bg);
+            color: var(--copy-btn-text);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+            line-height: 1.6;
+            white-space: nowrap;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--copy-btn-hover);
+        }
+
+        .copy-btn.copied {
+            background-color: #22c55e;
+            color: white;
+            border-color: #22c55e;
         }
 
         .tutorial-step .note {
@@ -500,6 +539,17 @@
             .tutorial-step pre {
                 font-size: 11px;
                 padding: 12px 16px;
+            }
+            .code-block-wrapper pre {
+                font-size: 11px;
+                padding: 12px 16px;
+                padding-right: 56px;
+            }
+            .copy-btn {
+                font-size: 11px;
+                padding: 3px 10px;
+                top: 8px;
+                right: 8px;
             }
             .declaration-content {
                 padding: 20px;
@@ -593,7 +643,10 @@
                     <div class="step-desc" id="step1Desc">
                         在 HTML 文件的 <code>&lt;head&gt;</code> 或 <code>&lt;body&gt;</code> 底部添加以下脚本：
                     </div>
-                    <pre><code>&lt;script src="https://staycaptcha.github.io/Captcha/stay-captcha.js"&gt;&lt;/script&gt;</code></pre>
+                    <div class="code-block-wrapper">
+                        <pre><code>&lt;script src="https://staycaptcha.github.io/Captcha/stay-captcha.js"&gt;&lt;/script&gt;</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
                 </div>
 
                 <div class="tutorial-step">
@@ -602,7 +655,10 @@
                     <div class="step-desc" id="step2Desc">
                         在页面中需要显示验证组件的位置，添加一个容器元素：
                     </div>
-                    <pre><code>&lt;div id="captcha-container"&gt;&lt;/div&gt;</code></pre>
+                    <div class="code-block-wrapper">
+                        <pre><code>&lt;div id="captcha-container"&gt;&lt;/div&gt;</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
                 </div>
 
                 <div class="tutorial-step">
@@ -611,7 +667,8 @@
                     <div class="step-desc" id="step3Desc">
                         调用 <code>STAYcaptcha.init()</code>：
                     </div>
-                    <pre><code>&lt;script&gt;
+                    <div class="code-block-wrapper">
+                        <pre><code>&lt;script&gt;
   STAYcaptcha.init({
     container: '#captcha-container',
     onSuccess: function() {
@@ -622,6 +679,8 @@
     }
   });
 &lt;/script&gt;</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
                     <div class="note" id="step3Note">
                         💡 组件内部的文字由 SDK 自带，你只需要在 <strong>onSuccess</strong> 里写验证通过后的逻辑。
                     </div>
@@ -633,7 +692,8 @@
                     <div class="step-desc" id="stepFullDesc">
                         将以下代码复制到 HTML 文件中即可运行：
                     </div>
-                    <pre><code>&lt;!DOCTYPE html&gt;
+                    <div class="code-block-wrapper">
+                        <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
@@ -658,6 +718,8 @@
 
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -674,6 +736,36 @@
 
     <script src="https://staycaptcha.github.io/Captcha/stay-captcha.js"></script>
     <script>
+        function copyCode(btn) {
+            const wrapper = btn.parentElement;
+            const pre = wrapper.querySelector('pre');
+            const code = pre.textContent;
+            
+            navigator.clipboard.writeText(code).then(function() {
+                const originalText = btn.textContent;
+                btn.textContent = '✅ 已复制';
+                btn.classList.add('copied');
+                setTimeout(function() {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(function() {
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                const originalText = btn.textContent;
+                btn.textContent = '✅ 已复制';
+                btn.classList.add('copied');
+                setTimeout(function() {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
         let previewInitialized = false;
         let captchaInstance = null;
 
@@ -785,11 +877,9 @@
                     captchaInstance = STAYcaptcha.init({
                         container: '#captcha-preview',
                         onSuccess: function() {
-                            // 验证通过，仅触发回调，不替换组件内容
                             console.log('✅ 验证通过');
                         },
                         onFail: function() {
-                            // 验证失败，仅触发回调，不替换组件内容
                             console.log('❌ 验证失败');
                         }
                     });
