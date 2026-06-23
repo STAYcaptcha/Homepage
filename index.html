@@ -602,11 +602,11 @@
         </div>
 
         <div class="preview-section">
-            <div class="preview-title" id="previewTitle">🔬 验证预览</div>
+            <div class="preview-title" id="previewTitle">验证预览</div>
             <div class="preview-subtitle" id="previewSubtitle">下方为根据部署教程实际运行的 STAYcaptcha 验证组件</div>
             <div class="preview-container">
                 <div id="captcha-preview">
-                    <span class="captcha-loading">⏳ 正在加载验证组件...</span>
+                    <span class="captcha-loading">正在加载验证组件...</span>
                 </div>
                 <div class="preview-actions">
                     <button class="btn-reset" id="resetPreviewBtn">
@@ -635,7 +635,7 @@
         </div>
 
         <div class="tutorial-section">
-            <div class="tutorial-title" id="tutorialTitle">🚀 部署教程</div>
+            <div class="tutorial-title" id="tutorialTitle">部署教程</div>
             <div class="tutorial-steps">
                 <div class="tutorial-step">
                     <span class="step-number">1</span>
@@ -672,22 +672,22 @@
   STAYcaptcha.init({
     container: '#captcha-container',
     onSuccess: function() {
-      // ✅ 验证通过
+      // 验证通过
     },
     onFail: function() {
-      // ❌ 验证失败
+      // 验证失败
     }
   });
 &lt;/script&gt;</code></pre>
                         <button class="copy-btn" onclick="copyCode(this)">复制</button>
                     </div>
                     <div class="note" id="step3Note">
-                        💡 组件内部的文字由 SDK 自带，你只需要在 <strong>onSuccess</strong> 里写验证通过后的逻辑。
+                        组件内部的文字由 SDK 自带，你只需要在 <strong>onSuccess</strong> 里写验证通过后的逻辑。
                     </div>
                 </div>
 
                 <div class="tutorial-step">
-                    <span class="step-number">📦</span>
+                    <span class="step-number">4</span>
                     <span class="step-title" id="stepFullTitle">完整示例</span>
                     <div class="step-desc" id="stepFullDesc">
                         将以下代码复制到 HTML 文件中即可运行：
@@ -708,10 +708,10 @@
         STAYcaptcha.init({
             container: '#captcha-container',
             onSuccess: function() {
-                alert('✅ 人机验证通过！');
+                alert('人机验证通过！');
             },
             onFail: function() {
-                alert('❌ 验证失败，请重试');
+                alert('验证失败，请重试');
             }
         });
     &lt;/script&gt;
@@ -728,7 +728,7 @@
             <div class="declaration-title" id="declarationTitle">声明</div>
             <div class="declaration-content">
                 <p id="declarationText1">本人机验证（STAYcaptcha）为开源项目，代码公开、免费试用。</p>
-                <p id="declarationText2">任何人可自由使用、修改、分享，但需保留版权声明：©智拓新创 Wisnovate 版权所有。</p>
+                <p id="declarationText2">任何人可自由使用、修改、分享，但需保留版权声明：智拓新创 Wisnovate 版权所有。</p>
                 <p id="declarationText3">本项目的验证能力不保证绝对安全，使用风险由使用者自行承担。</p>
             </div>
         </div>
@@ -743,7 +743,7 @@
             
             navigator.clipboard.writeText(code).then(function() {
                 const originalText = btn.textContent;
-                btn.textContent = '✅ 已复制';
+                btn.textContent = '已复制';
                 btn.classList.add('copied');
                 setTimeout(function() {
                     btn.textContent = originalText;
@@ -757,7 +757,7 @@
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
                 const originalText = btn.textContent;
-                btn.textContent = '✅ 已复制';
+                btn.textContent = '已复制';
                 btn.classList.add('copied');
                 setTimeout(function() {
                     btn.textContent = originalText;
@@ -777,7 +777,7 @@
                 themeBtnDark: "深色",
                 themeOptionLight: "浅色模式",
                 themeOptionDark: "深色模式",
-                previewTitle: "🔬 验证预览",
+                previewTitle: "验证预览",
                 previewSubtitle: "下方为根据部署教程实际运行的 STAYcaptcha 验证组件",
                 resetBtnText: "重置预览",
                 sectionTitle: "两种交互方式",
@@ -785,19 +785,19 @@
                 interaction1Desc: "长按「按住」按钮5秒钟，进度条满后自动完成验证，无需其他操作。",
                 interaction2Title: "方式二：可访问性挑战",
                 interaction2Desc: "按下「可访问性挑战」按钮5秒后，出现\"再次按下\"提示，点击按住按钮即可完成验证。",
-                tutorialTitle: "🚀 部署教程",
+                tutorialTitle: "部署教程",
                 step1Title: "引入 SDK",
                 step1Desc: "在 HTML 文件的 <head> 或 <body> 底部添加以下脚本：",
                 step2Title: "放置容器",
                 step2Desc: "在页面中需要显示验证组件的位置，添加一个容器元素：",
                 step3Title: "初始化验证器",
                 step3Desc: "调用 STAYcaptcha.init()：",
-                step3Note: "💡 组件内部的文字由 SDK 自带，你只需要在 onSuccess 里写验证通过后的逻辑。",
-                stepFullTitle: "📦 完整示例",
+                step3Note: "组件内部的文字由 SDK 自带，你只需要在 onSuccess 里写验证通过后的逻辑。",
+                stepFullTitle: "完整示例",
                 stepFullDesc: "将以下代码复制到 HTML 文件中即可运行：",
                 declarationTitle: "声明",
                 declarationText1: "本人机验证（STAYcaptcha）为开源项目，代码公开、免费试用。",
-                declarationText2: "任何人可自由使用、修改、分享，但需保留版权声明：©智拓新创 Wisnovate 版权所有。",
+                declarationText2: "任何人可自由使用、修改、分享，但需保留版权声明：智拓新创 Wisnovate 版权所有。",
                 declarationText3: "本项目的验证能力不保证绝对安全，使用风险由使用者自行承担。"
             },
             en: {
@@ -807,7 +807,7 @@
                 themeBtnDark: "Dark",
                 themeOptionLight: "Light Mode",
                 themeOptionDark: "Dark Mode",
-                previewTitle: "🔬 Live Preview",
+                previewTitle: "Live Preview",
                 previewSubtitle: "Below is the STAYcaptcha component running according to the deployment guide",
                 resetBtnText: "Reset Preview",
                 sectionTitle: "Two Interaction Methods",
@@ -815,19 +815,19 @@
                 interaction1Desc: "Press and hold the button for 5 seconds, the progress bar fills up and verification completes automatically.",
                 interaction2Title: "Method 2: Accessibility Challenge",
                 interaction2Desc: "Press the Accessibility Challenge button for 5 seconds, then click the hold button to complete verification.",
-                tutorialTitle: "🚀 Deployment Guide",
+                tutorialTitle: "Deployment Guide",
                 step1Title: "Include the SDK",
                 step1Desc: "Add the following script to the <head> or at the bottom of the <body> in your HTML file:",
                 step2Title: "Place the Container",
                 step2Desc: "Add a container element where you want the verification component to appear:",
                 step3Title: "Initialize the Verifier",
                 step3Desc: "Call STAYcaptcha.init():",
-                step3Note: "💡 The text inside the component is built into the SDK. You only need to write your logic inside onSuccess.",
-                stepFullTitle: "📦 Full Example",
+                step3Note: "The text inside the component is built into the SDK. You only need to write your logic inside onSuccess.",
+                stepFullTitle: "Full Example",
                 stepFullDesc: "Copy the following code into an HTML file and run it:",
                 declarationTitle: "Declaration",
                 declarationText1: "This human verification (STAYcaptcha) is an open-source project with publicly available code and free trial.",
-                declarationText2: "Anyone is free to use, modify, and share it, but must retain the copyright notice: © Wisnovate. All rights reserved.",
+                declarationText2: "Anyone is free to use, modify, and share it, but must retain the copyright notice: Wisnovate. All rights reserved.",
                 declarationText3: "The verification capability of this project is not guaranteed to be absolutely secure, and the user assumes all risks of use."
             }
         };
@@ -870,31 +870,31 @@
 
         function initCaptcha() {
             const container = document.getElementById('captcha-preview');
-            container.innerHTML = '<span class="captcha-loading">⏳ 正在加载验证组件...</span>';
+            container.innerHTML = '<span class="captcha-loading">正在加载验证组件...</span>';
 
             if (typeof STAYcaptcha !== 'undefined' && STAYcaptcha.init) {
                 try {
                     captchaInstance = STAYcaptcha.init({
                         container: '#captcha-preview',
                         onSuccess: function() {
-                            console.log('✅ 验证通过');
+                            console.log('验证通过');
                         },
                         onFail: function() {
-                            console.log('❌ 验证失败');
+                            console.log('验证失败');
                         }
                     });
                     previewInitialized = true;
                 } catch (e) {
-                    container.innerHTML = '<span class="captcha-error">❌ 验证组件初始化失败：' + e.message + '</span>';
+                    container.innerHTML = '<span class="captcha-error">验证组件初始化失败：' + e.message + '</span>';
                 }
             } else {
-                container.innerHTML = '<span class="captcha-error">❌ STAYcaptcha SDK 未加载，请检查网络连接后刷新页面重试。</span>';
+                container.innerHTML = '<span class="captcha-error">STAYcaptcha SDK 未加载，请检查网络连接后刷新页面重试。</span>';
             }
         }
 
         function resetPreview() {
             const container = document.getElementById('captcha-preview');
-            container.innerHTML = '<span class="captcha-loading">⏳ 正在重置验证组件...</span>';
+            container.innerHTML = '<span class="captcha-loading">正在重置验证组件...</span>';
 
             if (typeof STAYcaptcha !== 'undefined' && STAYcaptcha.reset) {
                 try {
@@ -903,7 +903,7 @@
             }
 
             setTimeout(function() {
-                container.innerHTML = '<span class="captcha-loading">⏳ 正在重新加载验证组件...</span>';
+                container.innerHTML = '<span class="captcha-loading">正在重新加载验证组件...</span>';
                 setTimeout(function() {
                     initCaptcha();
                 }, 300);
