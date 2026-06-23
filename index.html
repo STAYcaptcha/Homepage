@@ -294,12 +294,6 @@
             transform: translateY(0);
         }
 
-        .btn-reset svg {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 6px;
-        }
-
         .interactions-section {
             width: 100%;
             max-width: 800px;
@@ -517,6 +511,13 @@
             margin-bottom: 0;
         }
 
+        .tutorial-divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 40px auto;
+            max-width: 600px;
+        }
+
         @media (max-width: 640px) {
             .hero-title {
                 font-size: 36px;
@@ -609,13 +610,7 @@
                     <span class="captcha-loading">正在加载验证组件...</span>
                 </div>
                 <div class="preview-actions">
-                    <button class="btn-reset" id="resetPreviewBtn">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:6px;">
-                            <path d="M1 4v6h6"/>
-                            <path d="M3.51 2.51a8 8 0 1 0 2.82 13.22"/>
-                        </svg>
-                        <span id="resetBtnText">重置预览</span>
-                    </button>
+                    <button class="btn-reset" id="resetPreviewBtn">重置预览</button>
                 </div>
             </div>
         </div>
@@ -634,8 +629,9 @@
             </div>
         </div>
 
+        <!-- ========== 部署教程一 ========== -->
         <div class="tutorial-section">
-            <div class="tutorial-title" id="tutorialTitle">部署教程</div>
+            <div class="tutorial-title" id="tutorialTitle1">部署教程一：添加人机验证小组件</div>
             <div class="tutorial-steps">
                 <div class="tutorial-step">
                     <span class="step-number">1</span>
@@ -724,6 +720,85 @@
             </div>
         </div>
 
+        <!-- ========== 分隔线 ========== -->
+        <div class="tutorial-divider"></div>
+
+        <!-- ========== 部署教程二 ========== -->
+        <div class="tutorial-section">
+            <div class="tutorial-title" id="tutorialTitle2">部署教程二：添加网页安全验证页</div>
+
+            <div class="tutorial-steps">
+                <div class="tutorial-step">
+                    <span class="step-number">1</span>
+                    <span class="step-title">引入 SDK</span>
+                    <div class="step-desc">
+                        在 HTML 文件的 <code>&lt;head&gt;</code> 或 <code>&lt;body&gt;</code> 底部添加以下脚本：
+                    </div>
+                    <div class="code-block-wrapper">
+                        <pre><code>&lt;script src="https://staycaptcha.github.io/One-more-step/One%20more%20step.js"&gt;&lt;/script&gt;</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
+                    <div class="note">
+                        此 SDK 会自动全屏显示人机验证遮罩层，验证通过后页面内容才会显示。
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <span class="step-number">2</span>
+                    <span class="step-title">验证成功后自动关闭</span>
+                    <div class="step-desc">
+                        用户完成人机验证后，点击 <strong>Submit</strong> 按钮即可关闭遮罩层，正常访问网站。
+                    </div>
+                    <div class="note">
+                        如果未完成验证点击 Submit，验证框外围会显示红色边框提示。
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <span class="step-number">3</span>
+                    <span class="step-title">完整示例</span>
+                    <div class="step-desc">
+                        将以下代码复制到 HTML 文件中即可运行：
+                    </div>
+                    <div class="code-block-wrapper">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;我的网站&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;h1&gt;网站内容&lt;/h1&gt;
+    &lt;p&gt;验证通过后才能看到我&lt;/p&gt;
+
+    &lt;script src="https://staycaptcha.github.io/One-more-step/One%20more%20step.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
+                    <div class="note">
+                        引入 SDK 后，用户打开页面会先看到安全验证页，验证通过后才能浏览网站内容。
+                    </div>
+                </div>
+
+                <div class="tutorial-step">
+                    <span class="step-number">4</span>
+                    <span class="step-title">功能特性</span>
+                    <div class="step-desc">
+                        <ul style="padding-left: 20px; margin-top: 8px; line-height: 2;">
+                            <li>✅ 全屏遮罩，验证通过前阻止访问</li>
+                            <li>✅ 显示当前网站域名</li>
+                            <li>✅ 验证成功后点击 Submit 关闭</li>
+                            <li>✅ 验证失败时红色边框提示</li>
+                            <li>✅ 禁止右键、复制、选中文字</li>
+                            <li>✅ 完全免费，开箱即用</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="declaration-section">
             <div class="declaration-title" id="declarationTitle">声明</div>
             <div class="declaration-content">
@@ -736,6 +811,7 @@
 
     <script src="https://staycaptcha.github.io/Captcha/stay-captcha.js"></script>
     <script>
+        // ===== 复制功能 =====
         function copyCode(btn) {
             const wrapper = btn.parentElement;
             const pre = wrapper.querySelector('pre');
@@ -766,107 +842,9 @@
             });
         }
 
+        // ===== 预览功能 =====
         let previewInitialized = false;
         let captchaInstance = null;
-
-        const translations = {
-            zh: {
-                heroDesc: "由 Wisnovate 设计的动作式质询 CAPTCHA（人机身份验证）组件，可自定义显示内容。",
-                langBtnText: "中文",
-                themeBtnLight: "浅色",
-                themeBtnDark: "深色",
-                themeOptionLight: "浅色模式",
-                themeOptionDark: "深色模式",
-                previewTitle: "验证预览",
-                previewSubtitle: "下方为根据部署教程实际运行的 STAYcaptcha 验证组件",
-                resetBtnText: "重置预览",
-                sectionTitle: "两种交互方式",
-                interaction1Title: "方式一：长按验证",
-                interaction1Desc: "长按「按住」按钮5秒钟，进度条满后自动完成验证，无需其他操作。",
-                interaction2Title: "方式二：可访问性挑战",
-                interaction2Desc: "按下「可访问性挑战」按钮5秒后，出现\"再次按下\"提示，点击按住按钮即可完成验证。",
-                tutorialTitle: "部署教程",
-                step1Title: "引入 SDK",
-                step1Desc: "在 HTML 文件的 <head> 或 <body> 底部添加以下脚本：",
-                step2Title: "放置容器",
-                step2Desc: "在页面中需要显示验证组件的位置，添加一个容器元素：",
-                step3Title: "初始化验证器",
-                step3Desc: "调用 STAYcaptcha.init()：",
-                step3Note: "组件内部的文字由 SDK 自带，你只需要在 onSuccess 里写验证通过后的逻辑。",
-                stepFullTitle: "完整示例",
-                stepFullDesc: "将以下代码复制到 HTML 文件中即可运行：",
-                declarationTitle: "声明",
-                declarationText1: "本人机验证（STAYcaptcha）为开源项目，代码公开、免费试用。",
-                declarationText2: "任何人可自由使用、修改、分享，但需保留版权声明：智拓新创 Wisnovate 版权所有。",
-                declarationText3: "本项目的验证能力不保证绝对安全，使用风险由使用者自行承担。"
-            },
-            en: {
-                heroDesc: "An action-based challenge CAPTCHA component designed by Wisnovate for human verification, with customizable display content.",
-                langBtnText: "English",
-                themeBtnLight: "Light",
-                themeBtnDark: "Dark",
-                themeOptionLight: "Light Mode",
-                themeOptionDark: "Dark Mode",
-                previewTitle: "Live Preview",
-                previewSubtitle: "Below is the STAYcaptcha component running according to the deployment guide",
-                resetBtnText: "Reset Preview",
-                sectionTitle: "Two Interaction Methods",
-                interaction1Title: "Method 1: Long Press",
-                interaction1Desc: "Press and hold the button for 5 seconds, the progress bar fills up and verification completes automatically.",
-                interaction2Title: "Method 2: Accessibility Challenge",
-                interaction2Desc: "Press the Accessibility Challenge button for 5 seconds, then click the hold button to complete verification.",
-                tutorialTitle: "Deployment Guide",
-                step1Title: "Include the SDK",
-                step1Desc: "Add the following script to the <head> or at the bottom of the <body> in your HTML file:",
-                step2Title: "Place the Container",
-                step2Desc: "Add a container element where you want the verification component to appear:",
-                step3Title: "Initialize the Verifier",
-                step3Desc: "Call STAYcaptcha.init():",
-                step3Note: "The text inside the component is built into the SDK. You only need to write your logic inside onSuccess.",
-                stepFullTitle: "Full Example",
-                stepFullDesc: "Copy the following code into an HTML file and run it:",
-                declarationTitle: "Declaration",
-                declarationText1: "This human verification (STAYcaptcha) is an open-source project with publicly available code and free trial.",
-                declarationText2: "Anyone is free to use, modify, and share it, but must retain the copyright notice: Wisnovate. All rights reserved.",
-                declarationText3: "The verification capability of this project is not guaranteed to be absolutely secure, and the user assumes all risks of use."
-            }
-        };
-
-        let currentLang = 'zh';
-        let currentTheme = 'dark';
-
-        const langBtnText = document.getElementById('langBtnText');
-        const themeBtnText = document.getElementById('themeBtnText');
-        const themeOptionLight = document.getElementById('themeOptionLight');
-        const themeOptionDark = document.getElementById('themeOptionDark');
-        const heroDesc = document.getElementById('heroDesc');
-        const previewTitle = document.getElementById('previewTitle');
-        const previewSubtitle = document.getElementById('previewSubtitle');
-        const resetBtnText = document.getElementById('resetBtnText');
-        const sectionTitle = document.getElementById('sectionTitle');
-        const interaction1Title = document.getElementById('interaction1Title');
-        const interaction1Desc = document.getElementById('interaction1Desc');
-        const interaction2Title = document.getElementById('interaction2Title');
-        const interaction2Desc = document.getElementById('interaction2Desc');
-        const tutorialTitle = document.getElementById('tutorialTitle');
-        const step1Title = document.getElementById('step1Title');
-        const step1Desc = document.getElementById('step1Desc');
-        const step2Title = document.getElementById('step2Title');
-        const step2Desc = document.getElementById('step2Desc');
-        const step3Title = document.getElementById('step3Title');
-        const step3Desc = document.getElementById('step3Desc');
-        const step3Note = document.getElementById('step3Note');
-        const stepFullTitle = document.getElementById('stepFullTitle');
-        const stepFullDesc = document.getElementById('stepFullDesc');
-        const declarationTitle = document.getElementById('declarationTitle');
-        const declarationText1 = document.getElementById('declarationText1');
-        const declarationText2 = document.getElementById('declarationText2');
-        const declarationText3 = document.getElementById('declarationText3');
-
-        const langDropdown = document.getElementById('langDropdown');
-        const themeDropdown = document.getElementById('themeDropdown');
-        const previewContainer = document.getElementById('captcha-preview');
-        const resetBtn = document.getElementById('resetPreviewBtn');
 
         function initCaptcha() {
             const container = document.getElementById('captcha-preview');
@@ -910,45 +888,115 @@
             }, 400);
         }
 
-        resetBtn.addEventListener('click', function(e) {
+        document.getElementById('resetPreviewBtn').addEventListener('click', function(e) {
             e.preventDefault();
             resetPreview();
         });
 
+        // ===== 多语言支持 =====
+        const translations = {
+            zh: {
+                heroDesc: "由 Wisnovate 设计的动作式质询 CAPTCHA（人机身份验证）组件，可自定义显示内容。",
+                langBtnText: "中文",
+                themeBtnLight: "浅色",
+                themeBtnDark: "深色",
+                themeOptionLight: "浅色模式",
+                themeOptionDark: "深色模式",
+                previewTitle: "验证预览",
+                previewSubtitle: "下方为根据部署教程实际运行的 STAYcaptcha 验证组件",
+                resetBtnText: "重置预览",
+                sectionTitle: "两种交互方式",
+                interaction1Title: "方式一：长按验证",
+                interaction1Desc: "长按「按住」按钮5秒钟，进度条满后自动完成验证，无需其他操作。",
+                interaction2Title: "方式二：可访问性挑战",
+                interaction2Desc: "按下「可访问性挑战」按钮5秒后，出现\"再次按下\"提示，点击按住按钮即可完成验证。",
+                tutorialTitle1: "部署教程一：添加人机验证小组件",
+                tutorialTitle2: "部署教程二：添加网页安全验证页",
+                step1Title: "引入 SDK",
+                step1Desc: "在 HTML 文件的 <head> 或 <body> 底部添加以下脚本：",
+                step2Title: "放置容器",
+                step2Desc: "在页面中需要显示验证组件的位置，添加一个容器元素：",
+                step3Title: "初始化验证器",
+                step3Desc: "调用 STAYcaptcha.init()：",
+                step3Note: "组件内部的文字由 SDK 自带，你只需要在 <strong>onSuccess</strong> 里写验证通过后的逻辑。",
+                stepFullTitle: "完整示例",
+                stepFullDesc: "将以下代码复制到 HTML 文件中即可运行：",
+                declarationTitle: "声明",
+                declarationText1: "本人机验证（STAYcaptcha）为开源项目，代码公开、免费试用。",
+                declarationText2: "任何人可自由使用、修改、分享，但需保留版权声明：智拓新创 Wisnovate 版权所有。",
+                declarationText3: "本项目的验证能力不保证绝对安全，使用风险由使用者自行承担。"
+            },
+            en: {
+                heroDesc: "An action-based challenge CAPTCHA component designed by Wisnovate for human verification, with customizable display content.",
+                langBtnText: "English",
+                themeBtnLight: "Light",
+                themeBtnDark: "Dark",
+                themeOptionLight: "Light Mode",
+                themeOptionDark: "Dark Mode",
+                previewTitle: "Live Preview",
+                previewSubtitle: "Below is the STAYcaptcha component running according to the deployment guide",
+                resetBtnText: "Reset Preview",
+                sectionTitle: "Two Interaction Methods",
+                interaction1Title: "Method 1: Long Press",
+                interaction1Desc: "Press and hold the button for 5 seconds, the progress bar fills up and verification completes automatically.",
+                interaction2Title: "Method 2: Accessibility Challenge",
+                interaction2Desc: "Press the Accessibility Challenge button for 5 seconds, then click the hold button to complete verification.",
+                tutorialTitle1: "Tutorial 1: Add Human Verification Widget",
+                tutorialTitle2: "Tutorial 2: Add Security Verification Page",
+                step1Title: "Include the SDK",
+                step1Desc: "Add the following script to the <head> or at the bottom of the <body> in your HTML file:",
+                step2Title: "Place the Container",
+                step2Desc: "Add a container element where you want the verification component to appear:",
+                step3Title: "Initialize the Verifier",
+                step3Desc: "Call STAYcaptcha.init():",
+                step3Note: "The text inside the component is built into the SDK. You only need to write your logic inside onSuccess.",
+                stepFullTitle: "Full Example",
+                stepFullDesc: "Copy the following code into an HTML file and run it:",
+                declarationTitle: "Declaration",
+                declarationText1: "This human verification (STAYcaptcha) is an open-source project with publicly available code and free trial.",
+                declarationText2: "Anyone is free to use, modify, and share it, but must retain the copyright notice: Wisnovate. All rights reserved.",
+                declarationText3: "The verification capability of this project is not guaranteed to be absolutely secure, and the user assumes all risks of use."
+            }
+        };
+
+        let currentLang = 'zh';
+        let currentTheme = 'dark';
+
         function updateLanguage() {
             const t = translations[currentLang];
-            heroDesc.textContent = t.heroDesc;
-            langBtnText.textContent = t.langBtnText;
-            previewTitle.textContent = t.previewTitle;
-            previewSubtitle.textContent = t.previewSubtitle;
-            resetBtnText.textContent = t.resetBtnText;
-            sectionTitle.textContent = t.sectionTitle;
-            interaction1Title.textContent = t.interaction1Title;
-            interaction1Desc.textContent = t.interaction1Desc;
-            interaction2Title.textContent = t.interaction2Title;
-            interaction2Desc.textContent = t.interaction2Desc;
-            tutorialTitle.textContent = t.tutorialTitle;
-            step1Title.textContent = t.step1Title;
-            step1Desc.innerHTML = t.step1Desc;
-            step2Title.textContent = t.step2Title;
-            step2Desc.innerHTML = t.step2Desc;
-            step3Title.textContent = t.step3Title;
-            step3Desc.innerHTML = t.step3Desc;
-            step3Note.innerHTML = t.step3Note;
-            stepFullTitle.textContent = t.stepFullTitle;
-            stepFullDesc.innerHTML = t.stepFullDesc;
-            declarationTitle.textContent = t.declarationTitle;
-            declarationText1.textContent = t.declarationText1;
-            declarationText2.textContent = t.declarationText2;
-            declarationText3.textContent = t.declarationText3;
-            themeOptionLight.textContent = t.themeOptionLight;
-            themeOptionDark.textContent = t.themeOptionDark;
+            document.getElementById('heroDesc').textContent = t.heroDesc;
+            document.getElementById('langBtnText').textContent = t.langBtnText;
+            document.getElementById('previewTitle').textContent = t.previewTitle;
+            document.getElementById('previewSubtitle').textContent = t.previewSubtitle;
+            document.getElementById('resetBtnText').textContent = t.resetBtnText;
+            document.getElementById('sectionTitle').textContent = t.sectionTitle;
+            document.getElementById('interaction1Title').textContent = t.interaction1Title;
+            document.getElementById('interaction1Desc').textContent = t.interaction1Desc;
+            document.getElementById('interaction2Title').textContent = t.interaction2Title;
+            document.getElementById('interaction2Desc').textContent = t.interaction2Desc;
+            document.getElementById('tutorialTitle1').textContent = t.tutorialTitle1;
+            document.getElementById('tutorialTitle2').textContent = t.tutorialTitle2;
+            document.getElementById('step1Title').textContent = t.step1Title;
+            document.getElementById('step1Desc').innerHTML = t.step1Desc;
+            document.getElementById('step2Title').textContent = t.step2Title;
+            document.getElementById('step2Desc').innerHTML = t.step2Desc;
+            document.getElementById('step3Title').textContent = t.step3Title;
+            document.getElementById('step3Desc').innerHTML = t.step3Desc;
+            document.getElementById('step3Note').innerHTML = t.step3Note;
+            document.getElementById('stepFullTitle').textContent = t.stepFullTitle;
+            document.getElementById('stepFullDesc').innerHTML = t.stepFullDesc;
+            document.getElementById('declarationTitle').textContent = t.declarationTitle;
+            document.getElementById('declarationText1').textContent = t.declarationText1;
+            document.getElementById('declarationText2').textContent = t.declarationText2;
+            document.getElementById('declarationText3').textContent = t.declarationText3;
+            document.getElementById('themeOptionLight').textContent = t.themeOptionLight;
+            document.getElementById('themeOptionDark').textContent = t.themeOptionDark;
             updateThemeButtonText();
         }
 
         function updateThemeButtonText() {
             const t = translations[currentLang];
-            themeBtnText.textContent = currentTheme === 'light' ? t.themeBtnLight : t.themeBtnDark;
+            document.getElementById('themeBtnText').textContent = currentTheme === 'light' ? t.themeBtnLight : t.themeBtnDark;
         }
 
         function applyTheme(theme) {
@@ -961,7 +1009,7 @@
         function setLanguage(lang) {
             currentLang = lang;
             updateLanguage();
-            langDropdown.classList.remove('active');
+            document.getElementById('langDropdown').classList.remove('active');
         }
 
         function setupDropdown(dropdown) {
@@ -979,8 +1027,8 @@
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
         });
 
-        setupDropdown(langDropdown);
-        setupDropdown(themeDropdown);
+        setupDropdown(document.getElementById('langDropdown'));
+        setupDropdown(document.getElementById('themeDropdown'));
 
         document.querySelectorAll('[data-lang]').forEach(item => {
             item.addEventListener('click', (e) => {
@@ -995,7 +1043,7 @@
                 e.preventDefault();
                 e.stopPropagation();
                 applyTheme(item.getAttribute('data-theme'));
-                themeDropdown.classList.remove('active');
+                document.getElementById('themeDropdown').classList.remove('active');
             });
         });
 
@@ -1003,13 +1051,322 @@
         applyTheme(savedTheme === 'light' ? 'light' : 'dark');
         updateLanguage();
 
+        // 页面加载完成后先初始化，再自动重置预览
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(initCaptcha, 500);
+            setTimeout(function() {
+                initCaptcha();
+                setTimeout(function() {
+                    resetPreview();
+                }, 600);
+            }, 500);
         });
 
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setTimeout(initCaptcha, 500);
+            setTimeout(function() {
+                initCaptcha();
+                setTimeout(function() {
+                    resetPreview();
+                }, 600);
+            }, 500);
         }
+    </script>
+
+    <!-- 人机验证中间页 SDK（部署教程二） -->
+    <script>
+    (function() {
+        'use strict';
+
+        if (document.getElementById('captcha-overlay')) {
+            return;
+        }
+
+        var CONFIG = {
+            targetUrl: window.location.hostname || ''
+        };
+
+        var overlay = document.createElement('div');
+        overlay.id = 'captcha-overlay';
+        overlay.style.cssText = [
+            'position: fixed',
+            'top: 0',
+            'left: 0',
+            'width: 100vw',
+            'height: 100vh',
+            'background: #ffffff',
+            'z-index: 99999',
+            'display: flex',
+            'align-items: flex-start',
+            'justify-content: center',
+            'padding-top: 1.25rem',
+            'overflow: hidden',
+            'user-select: none',
+            '-webkit-user-select: none'
+        ].join(';');
+
+        var container = document.createElement('div');
+        container.style.cssText = [
+            'width: 100%',
+            'max-width: 1000px',
+            'padding: 0 20px 40px 20px',
+            'position: relative'
+        ].join(';');
+
+        var title = document.createElement('h1');
+        title.textContent = 'One more step';
+        title.style.cssText = [
+            'font-weight: 300',
+            'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+            'font-size: 4.5rem',
+            'color: #1a1a1a',
+            'margin: 0',
+            'text-align: left',
+            'margin-left: -60px'
+        ].join(';');
+
+        var subtitle = document.createElement('p');
+        var urlDisplay = CONFIG.targetUrl || '';
+        subtitle.textContent = 'Please complete the security check to access ' + urlDisplay;
+        subtitle.style.cssText = [
+            'font-weight: 300',
+            'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+            'font-size: 1.6rem',
+            'color: #888888',
+            'margin: 1rem 0 0 0',
+            'text-align: left',
+            'margin-left: -60px'
+        ].join(';');
+
+        var grayBar = document.createElement('div');
+        grayBar.style.cssText = [
+            'width: 100vw',
+            'height: 500px',
+            'background-color: #e0e0e0',
+            'margin-top: 2rem',
+            'margin-left: calc(-50vw + 50%)',
+            'border-radius: 0',
+            'position: relative'
+        ].join(';');
+
+        var whiteBox = document.createElement('div');
+        whiteBox.style.cssText = [
+            'background-color: #ffffff',
+            'border-radius: 0',
+            'padding: 50px 30px',
+            'width: 50%',
+            'max-width: 500px',
+            'box-shadow: 0 2px 10px rgba(0,0,0,0.06)',
+            'display: flex',
+            'flex-direction: column',
+            'align-items: flex-start',
+            'justify-content: center',
+            'position: absolute',
+            'top: 60px',
+            'left: calc(20px + (100vw - 1000px) / 2 - 60px)'
+        ].join(';');
+
+        var captchaContainer = document.createElement('div');
+        captchaContainer.id = 'captcha-container';
+        captchaContainer.style.cssText = [
+            'width: 100%',
+            'margin-left: -30px'
+        ].join(';');
+
+        var submitBtn = document.createElement('button');
+        submitBtn.textContent = 'Submit';
+        submitBtn.className = 'captcha-submit-btn';
+        submitBtn.style.cssText = [
+            'background-color: #e0e0e0',
+            'color: #000000',
+            'border: 1px solid #000000',
+            'border-radius: 0',
+            'padding: 4px 14px',
+            'font-size: 0.75rem',
+            'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+            'cursor: pointer',
+            'margin-top: 20px',
+            'align-self: flex-start'
+        ].join(';');
+        submitBtn.onmouseover = function() { this.style.opacity = '0.8'; };
+        submitBtn.onmouseout = function() { this.style.opacity = '1'; };
+
+        var browserIcon = document.createElement('div');
+        browserIcon.style.cssText = [
+            'position: absolute',
+            'top: 60px',
+            'right: -40px',
+            'width: 50%',
+            'height: calc(100% - 60px)',
+            'background-color: #ffffff',
+            'border-radius: 12px 0 0 0',
+            'display: flex',
+            'flex-direction: column',
+            'align-items: center',
+            'justify-content: center',
+            'overflow: hidden'
+        ].join(';');
+
+        var browserBar = document.createElement('div');
+        browserBar.style.cssText = [
+            'width: 100%',
+            'height: 40px',
+            'background-color: #f0f0f0',
+            'border-radius: 0',
+            'display: flex',
+            'align-items: center',
+            'padding: 0 16px',
+            'gap: 10px',
+            'flex-shrink: 0'
+        ].join(';');
+
+        var dotColors = ['#ff5f57', '#ffbd2e', '#28c840'];
+        for (var i = 0; i < 3; i++) {
+            var dot = document.createElement('div');
+            dot.style.cssText = [
+                'width: 14px',
+                'height: 14px',
+                'border-radius: 50%',
+                'background-color: ' + dotColors[i]
+            ].join(';');
+            browserBar.appendChild(dot);
+        }
+
+        var browserBody = document.createElement('div');
+        browserBody.style.cssText = [
+            'flex: 1',
+            'display: flex',
+            'align-items: center',
+            'justify-content: center',
+            'width: 100%',
+            'background-color: #ffffff',
+            'font-size: 160px',
+            'margin-left: -160px'
+        ].join(';');
+        browserBody.textContent = '⚠️';
+
+        browserIcon.appendChild(browserBar);
+        browserIcon.appendChild(browserBody);
+
+        var bottomRow = document.createElement('div');
+        bottomRow.style.cssText = [
+            'display: flex',
+            'align-items: flex-start',
+            'margin-top: 1rem',
+            'margin-left: -60px',
+            'width: calc(100% + 120px)'
+        ].join(';');
+
+        var bottomLeft = document.createElement('div');
+        bottomLeft.style.cssText = [
+            'font-weight: 400',
+            'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+            'font-size: 2rem',
+            'color: #000000',
+            'text-align: left',
+            'width: 50%',
+            'max-width: 500px'
+        ].join(';');
+        bottomLeft.innerHTML = 'Why do I have to complete a CAPTCHA?<div style="font-weight:400;font-family:-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif;font-size:1rem;color:#000000;text-align:left;margin-top:0.5rem;width:100%;">Completing the CAPTCHA proves you are a human and gives you temporary access to the web property.</div>';
+
+        var bottomRight = document.createElement('div');
+        bottomRight.style.cssText = [
+            'font-weight: 400',
+            'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+            'font-size: 2rem',
+            'color: #000000',
+            'text-align: left',
+            'width: 50%',
+            'max-width: 500px',
+            'margin-left: auto'
+        ].join(';');
+        bottomRight.innerHTML = 'What can I do to prevent this in the future?<div style="font-weight:400;font-family:-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif;font-size:1rem;color:#000000;text-align:left;margin-top:0.5rem;width:100%;">If you are on a personal connection, like at home, you can run an anti-virus scan on your device to make sure it is not infected with malware.</div><div style="font-weight:400;font-family:-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Arial, sans-serif;font-size:1rem;color:#000000;text-align:left;margin-top:0.3rem;width:100%;">If you are at an office or shared network, you can ask the network administrator to run a scan across the network looking for</div>';
+
+        bottomRow.appendChild(bottomLeft);
+        bottomRow.appendChild(bottomRight);
+
+        whiteBox.appendChild(captchaContainer);
+        whiteBox.appendChild(submitBtn);
+
+        grayBar.appendChild(whiteBox);
+        grayBar.appendChild(browserIcon);
+
+        container.appendChild(title);
+        container.appendChild(subtitle);
+        container.appendChild(grayBar);
+        container.appendChild(bottomRow);
+
+        overlay.appendChild(container);
+        document.body.appendChild(overlay);
+
+        var errorBorder = document.createElement('div');
+        errorBorder.id = 'captcha-error-border';
+        errorBorder.style.cssText = [
+            'position: absolute',
+            'top: 0',
+            'left: 0',
+            'width: 100%',
+            'height: 100%',
+            'border: 2px solid #ff0000',
+            'border-radius: 0',
+            'pointer-events: none',
+            'display: none',
+            'z-index: 10'
+        ].join(';');
+        whiteBox.style.position = 'relative';
+        whiteBox.appendChild(errorBorder);
+
+        var captchaVerified = false;
+
+        submitBtn.addEventListener('click', function() {
+            if (captchaVerified) {
+                var overlayEl = document.getElementById('captcha-overlay');
+                if (overlayEl && overlayEl.parentNode) {
+                    overlayEl.parentNode.removeChild(overlayEl);
+                }
+            } else {
+                errorBorder.style.display = 'block';
+                setTimeout(function() {
+                    errorBorder.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+
+        loadScript('https://staycaptcha.github.io/Captcha/stay-captcha.js', function() {
+            if (typeof STAYcaptcha !== 'undefined') {
+                STAYcaptcha.init({
+                    container: '#captcha-container',
+                    onSuccess: function() {
+                        captchaVerified = true;
+                    },
+                    onFail: function() {
+                        captchaVerified = false;
+                    }
+                });
+            }
+        });
+
+    })();
     </script>
 </body>
 </html>
